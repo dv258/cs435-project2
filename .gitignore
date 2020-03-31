@@ -1,0 +1,8 @@
+*.o
+
+.~lock*
+*.png
+*.pdf
+*.docx
+
+graph
