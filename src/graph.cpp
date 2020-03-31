@@ -12,9 +12,8 @@ using namespace std;
 template <class T>
 class Graph
 {
-public:
 	unordered_map<T, Node<T>*> nodeMap;
-
+public:
 	Graph(){}
 
 	void addNode(T value)

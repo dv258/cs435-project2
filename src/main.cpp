@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
@@ -11,7 +12,10 @@ using namespace std;
 
 Graph<string> createRandomUnweightedGraphIter(int n);
 Graph<string> createLinkedList(int n);
+vector<Node<string>*> BFTRecLinkedList(Graph<string> graph);
+vector<Node<string>*> BFTIterLinkedList(Graph<string> graph);
 void printGraph(Graph<string> graph);
+template <class T> void printVector(vector<T> &vec);
 
 string randomStringValue(int n);
 
@@ -19,23 +23,30 @@ int main()
 {
 	//srand(time(NULL));
 
-	Graph<string> graph = createRandomUnweightedGraphIter(7);
+	Graph<string> graph = createRandomUnweightedGraphIter(16);
 	printGraph(graph);
 
 	cout << endl << endl;
 
 	Graph<string> linkgraph = createLinkedList(16);
 	printGraph(linkgraph);
-/*
+
 	vector<Node<string>*> path = GraphSearch<string>::DFSIter(*linkgraph.getNodeByValue("I6MpsOIB"), *linkgraph.getNodeByValue("iayMcl82"));
-	for (unsigned int i = 0; i < path.size(); i++)
-		cout << path[i] << " ";
-	cout << endl;
-*/
+	printVector<Node<string>*>(path);
+
 	vector<Node<string>*> traversal = GraphSearch<string>::DFTIter(graph);
-	for (unsigned int i = 0; i < traversal.size(); i++)
-		cout << traversal[i] << " ";
-	cout << endl;
+	printVector<Node<string>*>(traversal);
+
+	traversal = GraphSearch<string>::BFTIter(graph);
+	printVector<Node<string>*>(traversal);
+
+	linkgraph = createLinkedList(10000);
+
+	traversal = BFTRecLinkedList(linkgraph);
+	printVector<Node<string>*>(traversal);
+
+	traversal = BFTIterLinkedList(linkgraph);
+	printVector<Node<string>*>(traversal);
 
 	return 0;
 }
@@ -85,6 +96,16 @@ Graph<string> createLinkedList(int n)
 	return graph;
 }
 
+vector<Node<string>*> BFTRecLinkedList(Graph<string> graph)
+{
+	return GraphSearch<string>::BFTRec(graph);
+}
+
+vector<Node<string>*> BFTIterLinkedList(Graph<string> graph)
+{
+	return GraphSearch<string>::BFTIter(graph);
+}
+
 void printGraph(Graph<string> graph)
 {
 	list<Node<string>*> nodeList = graph.getAllNodes();
@@ -95,13 +116,22 @@ void printGraph(Graph<string> graph)
 
 	for (unsigned int i = 0; i < nodeVec.size(); i++)
 	{
-		cout << nodeVec[i] << ": " << nodeVec[i]->value << " " << nodeVec[i]->getEdgesCount() << " ";
+		printf("%p: %s %3d ", nodeVec[i], nodeVec[i]->value.c_str(), nodeVec[i]->getEdgesCount());
 
-		for (auto iter = nodeVec[i]->adjacencyMap.begin(); iter != nodeVec[i]->adjacencyMap.end(); iter++)
-			cout << iter->second << " ";
+		vector<Node<string>*> nodes = nodeVec[i]->getAdjacentNodes();
+		for (auto iter = nodes.begin(); iter != nodes.end(); iter++)
+			cout << *iter << " ";
 
 		cout << endl;
 	}
+}
+
+template <class T>
+void printVector(vector<T> &vec)
+{
+	for (unsigned int i = 0; i < vec.size(); i++)
+		cout << vec[i] << " ";
+	cout << endl;
 }
 
 string randomStringValue(int n)

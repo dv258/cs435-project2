@@ -34,9 +34,10 @@ public:
 				break;
 			}
 
-			for (auto iter = cur->adjacencyMap.begin(); iter != cur->adjacencyMap.end(); iter++)
+			vector<Node<T>*> nodes = cur->getAdjacentNodes();
+			for (auto iter = nodes.begin(); iter != nodes.end(); iter++)
 			{
-				Node<T> *adj = iter->second;
+				Node<T> *adj = *iter;
 
 				if(visited.find(adj->value) != visited.end())
 					continue;
@@ -89,9 +90,10 @@ public:
 
 				traversal.push_back(cur);
 
-				for (auto iter = cur->adjacencyMap.begin(); iter != cur->adjacencyMap.end(); iter++)
+				vector<Node<T>*> nodes = cur->getAdjacentNodes();
+				for (auto iter = nodes.begin(); iter != nodes.end(); iter++)
 				{
-					Node<T> *adj = iter->second;
+					Node<T> *adj = *iter;
 					queue.push(adj);
 				}
 			}
@@ -127,12 +129,37 @@ public:
 
 				traversal.push_back(cur);
 
-				for (auto iter = cur->adjacencyMap.begin(); iter != cur->adjacencyMap.end(); iter++)
+				vector<Node<T>*> nodes = cur->getAdjacentNodes();
+				for (auto iter = nodes.begin(); iter != nodes.end(); iter++)
 				{
-					Node<T> *adj = iter->second;
+					Node<T> *adj = *iter;
 					stack.push(adj);
 				}
 			}
+		}
+
+		return traversal;
+	}
+
+	static vector<Node<T>*> BFTRec(Graph<T> &graph)
+	{
+		vector<Node<T>*> traversal;
+
+		//what
+
+		return traversal;
+	}
+
+	static vector<Node<T>*> DFTRec(Graph<T> &graph)
+	{
+		vector<Node<T>*> traversal;
+		list<Node<T>*> nodeList = graph.getAllNodes();
+		unordered_map<T, Node<T>*> visited;
+
+		for (auto nlIter = nodeList.begin(); nlIter != nodeList.end() && nodeList.size() > traversal.size(); nlIter++)
+		{
+			Node<T> *nlcur = *nlIter;
+			GraphSearch::_DFTRec(nlcur, traversal, visited);
 		}
 
 		return traversal;
@@ -149,9 +176,10 @@ private:
 			return;
 		}
 
-		for (auto iter = cur.adjacencyMap.begin(); iter != cur.adjacencyMap.end(); iter++)
+		vector<Node<T>*> nodes = cur->getAdjacentNodes();
+		for (auto iter = nodes.begin(); iter != nodes.end(); iter++)
 		{
-			Node<T> *adj = iter->second;
+			Node<T> *adj = *iter;
 
 			if(visited.find(adj->value) != visited.end())
 				continue;
@@ -163,6 +191,22 @@ private:
 				path.push_back(&cur);
 				return;
 			}
+		}
+	}
+
+	static void _DFTRec(Node<T> *cur, vector<Node<T>*> &traversal, unordered_map<T, Node<T>*> &visited)
+	{
+		if(visited.find(cur->value) != visited.end())
+			return;
+		visited.insert({cur->value, cur});
+
+		traversal.push_back(cur);
+
+		vector<Node<T>*> nodes = cur->getAdjacentNodes();
+		for (auto iter = nodes.begin(); iter != nodes.end(); iter++)
+		{
+			Node<T> *adj = *iter;
+			GraphSearch::_DFTRec(adj, traversal, visited);
 		}
 	}
 };

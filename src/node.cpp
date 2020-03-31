@@ -2,15 +2,18 @@
 #define __NODE_H
 
 #include <unordered_map>
+#include <vector>
 
 using namespace std;
 
 template <class T>
 class Node
 {
+private:
+	unordered_map<T, Node<T>*> adjacencyMap;
+
 public:
 	T value;
-	unordered_map<T, Node<T>*> adjacencyMap;
 
 	Node(T value)
 	{
@@ -37,6 +40,16 @@ public:
 	{
 		this->removeDirectedEdge(node);
 		node.removeDirectedEdge(*this);
+	}
+
+	vector<Node<T>*> getAdjacentNodes()
+	{
+		vector<Node<T>*> nodes;
+
+		for (auto iter = this->adjacencyMap.begin(); iter != this->adjacencyMap.end(); iter++)
+			nodes.push_back(iter->second);
+
+		return nodes;
 	}
 
 	int getEdgesCount()
