@@ -30,7 +30,8 @@ public:
 
 	Node<T> *getNodeByValue(T value)
 	{
-		return this->nodeMap.at(value);
+		auto node = this->nodeMap.find(value);
+		return node != this->nodeMap.end() ? node->second : nullptr;
 	}
 
 	void addUndirectedEdge(Node<T> &first, Node<T> &second)
@@ -50,6 +51,11 @@ public:
 			nodeList.push_back(pair.second);
 
 		return nodeList;
+	}
+
+	int getNodeCount()
+	{
+		return this->nodeMap.size();
 	}
 };
 

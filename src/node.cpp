@@ -42,6 +42,11 @@ public:
 		node.removeDirectedEdge(*this);
 	}
 
+	bool isConnectedTo(Node<T> &node)
+	{
+		return this->adjacencyMap.find(node.value) != this->adjacencyMap.end();
+	}
+
 	vector<Node<T>*> getAdjacentNodes()
 	{
 		vector<Node<T>*> nodes;
