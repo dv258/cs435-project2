@@ -10,7 +10,7 @@ template <class T>
 class Node
 {
 private:
-	unordered_map<T, Node<T>*> adjacencyMap;
+	unordered_map<T, pair<Node<T>*, int>> adjacencyMap;
 
 public:
 	T value;
@@ -22,7 +22,12 @@ public:
 
 	void addDirectedEdge(Node<T> &node)
 	{
-		this->adjacencyMap.insert({node.value, &node});
+		this->addWeightedEdge(node, 0);
+	}
+
+	void addWeightedEdge(Node<T> &node, int weight)
+	{
+		this->adjacencyMap.insert({node.value, pair<Node<T>*, int>(&node, weight)});
 	}
 
 	void addUndirectedEdge(Node<T> &node)
@@ -33,7 +38,7 @@ public:
 
 	void removeDirectedEdge(Node<T> &node)
 	{
-		this->adjacencyList.erase(node.value);
+		this->adjacencyMap.erase(node.value);
 	}
 
 	void removeUndirectedEdge(Node<T> &node)
@@ -50,6 +55,16 @@ public:
 	vector<Node<T>*> getAdjacentNodes()
 	{
 		vector<Node<T>*> nodes;
+
+		for (auto iter = this->adjacencyMap.begin(); iter != this->adjacencyMap.end(); iter++)
+			nodes.push_back(iter->second.first);
+
+		return nodes;
+	}
+
+	vector<pair<Node<T>*, int>> getAdjacentEdges()
+	{
+		vector<pair<Node<T>*, int>> nodes;
 
 		for (auto iter = this->adjacencyMap.begin(); iter != this->adjacencyMap.end(); iter++)
 			nodes.push_back(iter->second);

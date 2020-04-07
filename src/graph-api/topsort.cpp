@@ -3,7 +3,7 @@
 #include <stack>
 #include <vector>
 
-#include "directedgraph.cpp"
+#include "graph/directedgraph.cpp"
 
 using namespace std;
 
@@ -25,7 +25,7 @@ public:
 			Node<T> *node = *iter;
 			vector<Node<T>*> children = node->getAdjacentNodes();
 
-			for (int i = 0; i < children.size(); i++)
+			for (unsigned int i = 0; i < children.size(); i++)
 			{
 				Node<T> *child = children[i];
 				indegree[child->value]++;
@@ -47,7 +47,7 @@ public:
 
 			vector<Node<T>*> children = node->getAdjacentNodes();
 
-			for (int i = 0; i < children.size(); i++)
+			for (unsigned int i = 0; i < children.size(); i++)
 			{
 				indegree[children[i]->value]--;
 				if(indegree[children[i]->value] == 0)
@@ -86,7 +86,7 @@ private:
 		visited.insert({node->value, node});
 
 		vector<Node<T>*> children = node->getAdjacentNodes();
-		for (int i = 0; i < children.size(); i++)
+		for (unsigned int i = 0; i < children.size(); i++)
 		{
 			Node<T> *adj = children[i];
 			if(visited.find(adj->value) != visited.end())
