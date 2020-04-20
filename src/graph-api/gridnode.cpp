@@ -82,7 +82,7 @@ public:
 
 	int getDistance(GridNode<T> &node)
 	{
-		return sqrt(pow(node.x - this->x, 2) + pow(node.y - this->y, 2));
+		return abs(node.x - this->x) + abs(node.y - this->y);
 	}
 
 	int getEdgesCount()

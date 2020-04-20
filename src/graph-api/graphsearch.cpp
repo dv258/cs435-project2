@@ -144,8 +144,11 @@ public:
 	static vector<Node<T>*> BFTRec(Graph<T> &graph)
 	{
 		vector<Node<T>*> traversal;
+		list<Node<T>*> nl = graph.getAllNodes();
+		vector<Node<T>*> nodeList(nl.begin(), nl.end());
+		unordered_map<T, Node<T>*> visited;
 
-		//what
+		GraphSearch::_BFTRec(nodeList[0], traversal, nodeList, 0, visited);
 
 		return traversal;
 	}
@@ -165,6 +168,8 @@ public:
 		return traversal;
 	}
 private:
+	//helpers
+
 	static void _DFSRec(Node<T> &cur, Node<T> &end, vector<Node<T>*> &path, unordered_map<T, Node<T>*> &visited, bool &found)
 	{
 		visited.insert({cur.value, &cur});
@@ -192,6 +197,38 @@ private:
 				return;
 			}
 		}
+	}
+
+	static void _BFTRec(Node<T> *nlcur, vector<Node<T>*> &traversal, vector<Node<T>*> nodeList, unsigned int idx, unordered_map<T, Node<T>*> &visited)
+	{
+		if(idx++ == nodeList.size())
+			return;
+		if(visited.find(nlcur->value) != visited.end())
+			return;
+
+		queue<Node<T>*> queue;
+		queue.push(nlcur);
+
+		while(!queue.empty())
+		{
+			Node<T> *cur = queue.front();
+			queue.pop();
+
+			if(visited.find(cur->value) != visited.end())
+				continue;
+			visited.insert({cur->value, cur});
+
+			traversal.push_back(cur);
+
+			vector<Node<T>*> nodes = cur->getAdjacentNodes();
+			for (auto iter = nodes.begin(); iter != nodes.end(); iter++)
+			{
+				Node<T> *adj = *iter;
+				queue.push(adj);
+			}
+		}
+
+		GraphSearch::_BFTRec(nodeList[idx], traversal, nodeList, idx, visited);
 	}
 
 	static void _DFTRec(Node<T> *cur, vector<Node<T>*> &traversal, unordered_map<T, Node<T>*> &visited)

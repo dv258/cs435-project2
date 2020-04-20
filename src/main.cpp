@@ -39,6 +39,8 @@ string randomStringValue(int n);
 
 int main()
 {
+	//testing code
+
 	//srand(time(NULL));
 	srand(5866);
 
@@ -127,10 +129,7 @@ Graph<string> createRandomUnweightedGraphIter(int n)
 		graph.addNode(randomStringValue(8));
 
 	list<Node<string>*> nodeList = graph.getAllNodes();
-	vector<Node<string>*> nodeVec;
-
-	for (auto iter = nodeList.begin(); iter != nodeList.end(); iter++)
-		nodeVec.push_back(*iter);
+	vector<Node<string>*> nodeVec(nodeList.begin(), nodeList.end());
 
 	for (int i = 0; i < n; i++)
 	{
@@ -185,9 +184,12 @@ DirectedGraph<string> createRandomDAGIter(int n)
 			{
 				Node<string> *cur = nodes[i];
 
+				//add random edges to the next level
+
 				int nodecount = rand() % (maxNodes - minNodes + 1) + minNodes;
 				for (int j = 0; j < nodecount && totalNodes < n; j++)
 				{
+					//randomly add extra edge to node already existing
 					if(rand() % 100 < 30)
 					{
 						Node<string> *conn = nullptr;
@@ -222,6 +224,7 @@ DirectedGraph<string> createRandomDAGIter(int n)
 			nextNodes.push_back(newNode);
 		}
 
+		//change current level to nodes added
 		nodes = nextNodes;
 		nextNodes.clear();
 	}
@@ -292,6 +295,7 @@ GridGraph<string> createRandomGridGraph(int n)
 	{
 		for (int x = 0; x <= n; x++)
 		{
+			//go through each direction of the node
 			for (int k = 0; k < 4; k++)
 			{
 				int newx = x;
@@ -316,7 +320,7 @@ GridGraph<string> createRandomGridGraph(int n)
 				if(newx < 0 || newx > n || newy < 0 || newy > n)
 					continue;
 
-				if(rand() % 2)
+				if(rand() & 1)
 					graph.addUndirectedEdge(*graph.getNodeByValue(to_string(x) + "_" + to_string(y)), *graph.getNodeByValue(to_string(newx) + "_" + to_string(newy)));
 			}
 		}
@@ -373,6 +377,8 @@ unordered_map<string, pair<Node<string>*, int>> dijkstras(Node<string> *start)
 					continue;
 				unvisited.insert({adj->value, adj});
 
+				//update values
+
 				if(nodeDists.find(adj->value) != nodeDists.end())
 				{
 					if(nodeDists[node->value].second + weight < nodeDists[adj->value].second)
@@ -394,11 +400,12 @@ vector<GridNode<string>*> astar(GridNode<string> *src, GridNode<string> *dst)
 {
 	vector<GridNode<string>*> path;
 
+	//compare by cost + heuristic
 	auto compare = [](tuple<GridNode<string>*, GridNode<string>*, int, int> lhs, tuple<GridNode<string>*, GridNode<string>*, int, int> rhs){
 		return get<2>(lhs) + get<3>(lhs) > get<2>(rhs) + get<3>(rhs);
 	};
 
-	//value: node, parent, cost, heuristic
+	//tuple value: node, parent, cost, heuristic
 	unordered_map<string, tuple<GridNode<string>*, GridNode<string>*, int, int>> nodeDists;
 	unordered_map<string, GridNode<string>*> visited;
 	unordered_map<string, GridNode<string>*> unvisited;
@@ -436,6 +443,8 @@ vector<GridNode<string>*> astar(GridNode<string> *src, GridNode<string> *dst)
 				if(visited.find(adj->value) != visited.end())
 					continue;
 				unvisited.insert({adj->value, adj});
+
+				//update values
 
 				if(nodeDists.find(adj->value) != nodeDists.end())
 				{
